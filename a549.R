@@ -1,13 +1,43 @@
 library(dplyr)
 library(tidyr)
-setwd("C:/Users/Shiyi Yin/AppData/Local/Packages/CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc/LocalState/rootfs/home/shiyi/proTFbinding")
-a<-read.table("promoter.bed")
-b<-read.table("samplename")
-a549<-b%>% filter(V2=="A")
-as.vector(a$V8[995])
+###########
+# get the directory of current file
+# devtools::install_github("rstudio/rstudioapi")
+# rstudioapi::getSourceEditorContext()$path
+# dirname(rstudioapi::getSourceEditorContext()$path)
+###########
+#setwd("C:/Users/Shiyi Yin/AppData/Local/Packages/CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc/LocalState/rootfs/home/shiyi/proTFbinding")
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
+######
+# reading in the raw bed file
+a<-read.table("promoter.bed")
+
+# reformat the sample source and peak score column
 a_sep<-separate_rows(a,V8, V9)
+
+
+########
+# reading in the sample code and sample full name table
+b<-read.table("samplename")
+
+########
+# filter only with A549 cells which is a nsclc cancer cell line
+a549<-b%>% filter(V2=="A")
+
+###############
+# filter the raw bed file based on if each entry is from a549 source
 final_a<-a_sep[which(a_sep$V8%in%a549$V1),]
+
+############
+# assign a549 score from the above matching to the main score to display
 final_a$V6=final_a$V9
+
+###########
+# write the output bed file for visualization
+# remember to set useScore=1 before visualization, this is now done manually, can be scripted in future
 write.table(final_a[,c(-1,-7,-8,-9)],file="a549.bed", quote = F,col.names = F,row.names = F)
+
+##########
+# notes of the column biological meanings
 #bin	chrom	chromStart	chromEnd	name	score	sourceCount	sourceIds	sourceScores

@@ -11,11 +11,12 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 ######
 # reading in the raw bed file
+# future scaling up, i can download the whole dataframe from ucsc
+# http://genome.ucsc.edu/cgi-bin/hgTables?hgsid=1262006667_RjGTapTAm4SH8VfqtVluPZs8R8j9&clade=mammal&org=Human&db=hg38&hgta_group=regulation&hgta_track=encRegTfbsClustered&hgta_table=encRegTfbsClustered&hgta_regionType=genome&position=chr11%3A126%2C257%2C094-126%2C271%2C394&hgta_outputType=primaryTable&hgta_outFileName=
 a<-read.table("promoter.bed")
 
 # reformat the sample source and peak score column
 a_sep<-separate_rows(a,V8, V9)
-
 
 ########
 # reading in the sample code and sample full name table

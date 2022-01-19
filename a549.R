@@ -10,12 +10,13 @@ library(tidyr)
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 ######
-# reading in the raw bed file
+# reading in the raw bed file or a smaller window file
+a2<-read.table("raw_peak.gz")
 a<-read.table("promoter.bed")
 
 # reformat the sample source and peak score column
 a_sep<-separate_rows(a,V8, V9)
-
+a2_sep<-separate_rows(a2,V8, V9)
 
 ########
 # reading in the sample code and sample full name table
@@ -28,15 +29,17 @@ a549<-b%>% filter(V2=="A")
 ###############
 # filter the raw bed file based on if each entry is from a549 source
 final_a<-a_sep[which(a_sep$V8%in%a549$V1),]
-
+final_a549_full<-a2_sep[which(a2_sep$V8%in%a549$V1),]
 ############
 # assign a549 score from the above matching to the main score to display
 final_a$V6=final_a$V9
-
+final_a549_full$V6=final_a549_full$V9
 ###########
 # write the output bed file for visualization
 # remember to set useScore=1 before visualization, this is now done manually, can be scripted in future
 write.table(final_a[,c(-1,-7,-8,-9)],file="a549.bed", quote = F,col.names = F,row.names = F)
+write.table(final_a549_full[,c(-1,-7,-8,-9)],file="a549_full.bed", quote = F,col.names = F,row.names = F)
+#system("sed '1 s/^/track name=A549 useScore=1\n/' a549_full.bed > a549_full_visualization.bed")
 
 ##########
 # notes of the column biological meanings

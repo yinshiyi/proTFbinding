@@ -27,6 +27,8 @@ b<-read.table("samplename")
 ########
 # filter only with A549 cells which is a nsclc cancer cell line
 a549<-b%>% filter(V2=="A")
+HEK293<-b%>% filter(V2=="h")
+
 
 ###############
 # filter the raw bed file based on if each entry is from a549 source
